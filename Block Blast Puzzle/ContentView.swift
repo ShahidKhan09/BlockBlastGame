@@ -1,6 +1,5 @@
 // BlockBlastGame.swift
-// Paste this as ContentView.swift in a new Xcode iOS 17+ project.
-// Delete the existing ContentView.swift content completely.
+// Main Block Blast Puzzle game view
 
 import SwiftUI
 import UIKit
@@ -8,28 +7,6 @@ import UIKit
 // MARK: - Color Extensions
 
 extension Color {
-    static let neonCyan   = Color(hex: "#00E5FF")
-    static let neonPink   = Color(hex: "#FF2D78")
-    static let neonOrange = Color(hex: "#FF6B35")
-    static let darkBg     = Color(hex: "#0A0F2A")
-    static let surface    = Color(hex: "#141B3C")
-    static let cellBorder = Color(hex: "#1E2A5A")
-    static let gold       = Color(hex: "#FFD700")
-    static let neonGreen  = Color(hex: "#39FF14")
-    static let neonPurple = Color(hex: "#BF00FF")
-    static let neonYellow = Color(hex: "#FFE600")
-    static let neonBlue   = Color(hex: "#1B6FFF")
-    static let bloodRed   = Color(hex: "#FF0033")
-    static let darkRed    = Color(hex: "#8B0000")
-    static let softGreen  = Color(hex: "#90EE90")
-    static let lightBlue  = Color(hex: "#87CEEB")
-
-    static let blockColors: [Color] = [
-        Color(hex: "#00E5FF"), Color(hex: "#FF2D78"), Color(hex: "#FF6B35"),
-        Color(hex: "#39FF14"), Color(hex: "#BF00FF"), Color(hex: "#FFE600"),
-        Color(hex: "#1B6FFF")
-    ]
-
     init(hex: String) {
         let h = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var val: UInt64 = 0
@@ -51,11 +28,33 @@ extension Color {
                   blue:  Double(b)/255,
                   opacity: Double(a)/255)
     }
+
+    static let neonCyan   = Color(hex: "#00E5FF")
+    static let neonPink   = Color(hex: "#FF6EC7")
+    static let neonOrange = Color(hex: "#FF6B35")
+    static let darkBg     = Color(hex: "#0A0F2A")
+    static let surface    = Color(hex: "#141B3C")
+    static let cellBorder = Color(hex: "#1E2A5A")
+    static let gold       = Color(hex: "#FFD700")
+    static let neonGreen  = Color(hex: "#39FF14")
+    static let neonPurple = Color(hex: "#BF00FF")
+    static let neonYellow = Color(hex: "#FFE600")
+    static let neonBlue   = Color(hex: "#1B6FFF")
+    static let bloodRed   = Color(hex: "#FF0033")
+    static let darkRed    = Color(hex: "#8B0000")
+    static let softGreen  = Color(hex: "#90EE90")
+    static let lightBlue  = Color(hex: "#87CEEB")
+
+    static let blockColors: [Color] = [
+        Color(hex: "#00E5FF"), Color(hex: "#FF6EC7"), Color(hex: "#FF6B35"),
+        Color(hex: "#39FF14"), Color(hex: "#BF00FF"), Color(hex: "#FFE600"),
+        Color(hex: "#1B6FFF")
+    ]
 }
 
 // MARK: - Difficulty (Campaign Stages)
 
-enum Difficulty: String, CaseIterable, Codable {
+enum BBDifficulty: String, CaseIterable, Codable {
     case beginner, easy, normal, hard, expert, ultraHard
 
     var gridSize: Int {
@@ -142,7 +141,7 @@ enum Difficulty: String, CaseIterable, Codable {
 
 // MARK: - Shape Templates
 
-struct ShapeTemplate {
+struct BBShapeTemplate {
     let cells: [[Int]]
     var rows: Int { cells.count }
     var cols: Int { cells[0].count }
@@ -153,54 +152,54 @@ struct ShapeTemplate {
     }
 }
 
-let kShapeTemplates: [ShapeTemplate] = [
-    ShapeTemplate(cells: [[1]]),
-    ShapeTemplate(cells: [[1,1]]),
-    ShapeTemplate(cells: [[1],[1]]),
-    ShapeTemplate(cells: [[1,1],[1,1]]),
-    ShapeTemplate(cells: [[1,1,1]]),
-    ShapeTemplate(cells: [[1],[1],[1]]),
-    ShapeTemplate(cells: [[1,0],[1,0],[1,1]]),
-    ShapeTemplate(cells: [[0,1],[0,1],[1,1]]),
-    ShapeTemplate(cells: [[1,1,1],[0,1,0]]),
-    ShapeTemplate(cells: [[0,1,1],[1,1,0]]),
-    ShapeTemplate(cells: [[1,1,0],[0,1,1]]),
-    ShapeTemplate(cells: [[1,1],[1,1],[1,1]]),
-    ShapeTemplate(cells: [[1,1,1],[1,1,1]]),
-    ShapeTemplate(cells: [[1,1],[1,0]]),
-    ShapeTemplate(cells: [[0,1,0],[1,1,1],[0,1,0]]),
-    ShapeTemplate(cells: [[1,1,1,1]]),
-    ShapeTemplate(cells: [[1],[1],[1],[1]]),
-    ShapeTemplate(cells: [[1,1,1],[1,0,0]]),
-    ShapeTemplate(cells: [[1,1,1],[0,0,1]]),
-    ShapeTemplate(cells: [[1,1,0],[0,1,1],[0,0,1]]),
+let kBBShapeTemplates: [BBShapeTemplate] = [
+    BBShapeTemplate(cells: [[1]]),
+    BBShapeTemplate(cells: [[1,1]]),
+    BBShapeTemplate(cells: [[1],[1]]),
+    BBShapeTemplate(cells: [[1,1],[1,1]]),
+    BBShapeTemplate(cells: [[1,1,1]]),
+    BBShapeTemplate(cells: [[1],[1],[1]]),
+    BBShapeTemplate(cells: [[1,0],[1,0],[1,1]]),
+    BBShapeTemplate(cells: [[0,1],[0,1],[1,1]]),
+    BBShapeTemplate(cells: [[1,1,1],[0,1,0]]),
+    BBShapeTemplate(cells: [[0,1,1],[1,1,0]]),
+    BBShapeTemplate(cells: [[1,1,0],[0,1,1]]),
+    BBShapeTemplate(cells: [[1,1],[1,1],[1,1]]),
+    BBShapeTemplate(cells: [[1,1,1],[1,1,1]]),
+    BBShapeTemplate(cells: [[1,1],[1,0]]),
+    BBShapeTemplate(cells: [[0,1,0],[1,1,1],[0,1,0]]),
+    BBShapeTemplate(cells: [[1,1,1,1]]),
+    BBShapeTemplate(cells: [[1],[1],[1],[1]]),
+    BBShapeTemplate(cells: [[1,1,1],[1,0,0]]),
+    BBShapeTemplate(cells: [[1,1,1],[0,0,1]]),
+    BBShapeTemplate(cells: [[1,1,0],[0,1,1],[0,0,1]]),
 ]
 
 // MARK: - Block
 
-struct Block: Identifiable {
+struct BBBlock: Identifiable {
     let id = UUID()
-    let template: ShapeTemplate
+    let template: BBShapeTemplate
     let color: Color
     let colorIndex: Int
 
     init(colorIndex: Int) {
         self.colorIndex = colorIndex
-        self.template = kShapeTemplates.randomElement()!
+        self.template = kBBShapeTemplates.randomElement()!
         self.color = Color.blockColors[colorIndex % Color.blockColors.count]
     }
 }
 
 // MARK: - Grid Cell
 
-struct GridCell {
+struct BBGridCell {
     var filled: Bool = false
     var color: Color = .clear
 }
 
 // MARK: - Particle
 
-struct Particle: Identifiable {
+struct BBParticle: Identifiable {
     let id = UUID()
     var x: CGFloat
     var y: CGFloat
@@ -213,9 +212,9 @@ struct Particle: Identifiable {
 
 // MARK: - Campaign Stats
 
-struct CampaignStats: Codable {
-    var currentStage: String = Difficulty.beginner.rawValue
-    var highestStageReached: String = Difficulty.beginner.rawValue
+struct BBCampaignStats: Codable {
+    var currentStage: String = BBDifficulty.beginner.rawValue
+    var highestStageReached: String = BBDifficulty.beginner.rawValue
     var gamesPlayed: Int = 0
     var gamesWon: Int = 0
     var totalScore: Int = 0
@@ -226,7 +225,7 @@ struct CampaignStats: Codable {
 
 // MARK: - DisplayLink Proxy
 
-final class DisplayLinkProxy {
+final class BBDisplayLinkProxy {
     var callback: ((Double) -> Void)?
     private var link: CADisplayLink?
     private var lastTS: CFTimeInterval = 0
@@ -247,18 +246,18 @@ final class DisplayLinkProxy {
 // MARK: - ViewModel
 
 @MainActor
-final class GameViewModel: ObservableObject {
+final class BBGameViewModel: ObservableObject {
 
     // MARK: State
-    @Published var grid: [[GridCell]] = []
+    @Published var grid: [[BBGridCell]] = []
     @Published var gridSize: Int = 5
-    @Published var queue: [Block?] = [nil, nil, nil]
+    @Published var queue: [BBBlock?] = [nil, nil, nil]
     @Published var score: Int = 0
     @Published var scoreBump: Bool = false
     @Published var shufflesLeft: Int = 10
     @Published var isGameOver: Bool = false
     @Published var gameWon: Bool = false
-    @Published var particles: [Particle] = []
+    @Published var particles: [BBParticle] = []
     @Published var highlightedCells: [(Int,Int)] = []
     @Published var highlightValid: Bool = false
     @Published var draggedBlockIndex: Int? = nil
@@ -270,13 +269,13 @@ final class GameViewModel: ObservableObject {
     @Published var showDefeat: Bool = false
     
     // Campaign
-    @Published var campaignStats: CampaignStats = CampaignStats()
-    @Published var currentDifficulty: Difficulty = .beginner
+    @Published var campaignStats: BBCampaignStats = BBCampaignStats()
+    @Published var currentDifficulty: BBDifficulty = .beginner
     
     var gridFrame: CGRect = .zero
     private var colorCounter: Int = 0
-    private let dlProxy = DisplayLinkProxy()
-    private var undoStack: [(grid: [[GridCell]], queue: [Block?], score: Int)] = []
+    private let dlProxy = BBDisplayLinkProxy()
+    private var undoStack: [(grid: [[BBGridCell]], queue: [BBBlock?], score: Int)] = []
     private var maxUndoUses: Int = 3
     private var gameEnded: Bool = false
     
@@ -288,9 +287,9 @@ final class GameViewModel: ObservableObject {
     init() {
         hapticsEnabled = UserDefaults.standard.object(forKey: "hapticsEnabled") as? Bool ?? true
         if let data = UserDefaults.standard.data(forKey: "campaignStats"),
-           let s = try? JSONDecoder().decode(CampaignStats.self, from: data) {
+           let s = try? JSONDecoder().decode(BBCampaignStats.self, from: data) {
             campaignStats = s
-            if let stage = Difficulty(rawValue: campaignStats.currentStage) {
+            if let stage = BBDifficulty(rawValue: campaignStats.currentStage) {
                 currentDifficulty = stage
             }
         }
@@ -310,7 +309,7 @@ final class GameViewModel: ObservableObject {
         showDefeat = false
         
         gridSize = currentDifficulty.gridSize
-        let newGrid = Array(repeating: Array(repeating: GridCell(), count: gridSize), count: gridSize)
+        let newGrid = Array(repeating: Array(repeating: BBGridCell(), count: gridSize), count: gridSize)
         grid = newGrid
         score = 0
         shufflesLeft = currentDifficulty.maxShuffles
@@ -327,7 +326,7 @@ final class GameViewModel: ObservableObject {
     // MARK: Queue
     private func refillQueue() {
         for i in 0..<3 where queue[i] == nil {
-            queue[i] = Block(colorIndex: colorCounter)
+            queue[i] = BBBlock(colorIndex: colorCounter)
             colorCounter += 1
         }
     }
@@ -394,7 +393,7 @@ final class GameViewModel: ObservableObject {
         dragLocation = .zero
     }
     
-    private func snapOrigin(for location: CGPoint, block: Block) -> (Int,Int)? {
+    private func snapOrigin(for location: CGPoint, block: BBBlock) -> (Int,Int)? {
         guard gridFrame != .zero else { return nil }
         let cs = currentDifficulty.cellSize
         let relX = location.x - gridFrame.minX
@@ -404,7 +403,7 @@ final class GameViewModel: ObservableObject {
         return (row, col)
     }
     
-    func canPlace(block: Block, at origin: (Int,Int)) -> Bool {
+    func canPlace(block: BBBlock, at origin: (Int,Int)) -> Bool {
         for (dr,dc) in block.template.filledCells {
             let r = origin.0+dr, c = origin.1+dc
             if r < 0 || r >= gridSize || c < 0 || c >= gridSize { return false }
@@ -413,9 +412,9 @@ final class GameViewModel: ObservableObject {
         return true
     }
     
-    private func placeBlock(block: Block, at origin: (Int,Int), queueIdx: Int) {
+    private func placeBlock(block: BBBlock, at origin: (Int,Int), queueIdx: Int) {
         for (dr,dc) in block.template.filledCells {
-            grid[origin.0+dr][origin.1+dc] = GridCell(filled: true, color: block.color)
+            grid[origin.0+dr][origin.1+dc] = BBGridCell(filled: true, color: block.color)
         }
         let pointsEarned = block.template.filledCells.count * currentDifficulty.multiplier
         bumpScore(pointsEarned)
@@ -453,7 +452,7 @@ final class GameViewModel: ObservableObject {
         }
         
         // Advance to next difficulty if not last
-        let allDifficulties = Difficulty.allCases
+        let allDifficulties = BBDifficulty.allCases
         if let currentIndex = allDifficulties.firstIndex(of: currentDifficulty),
            currentIndex + 1 < allDifficulties.count {
             let nextDifficulty = allDifficulties[currentIndex + 1]
@@ -472,7 +471,7 @@ final class GameViewModel: ObservableObject {
             guard let self = self else { return }
             self.showVictory = false
             // Reload with next difficulty (or current if completed all)
-            if let nextStageRaw = Difficulty(rawValue: self.campaignStats.currentStage) {
+            if let nextStageRaw = BBDifficulty(rawValue: self.campaignStats.currentStage) {
                 self.currentDifficulty = nextStageRaw
                 self.resetGame()
             } else {
@@ -515,8 +514,8 @@ final class GameViewModel: ObservableObject {
             bumpScore(points)
             spawnParticles(rows: rows, cols: cols, color: blockColor)
         }
-        for r in rows { for c in 0..<gridSize { grid[r][c] = GridCell() } }
-        for c in cols { for r in 0..<gridSize { grid[r][c] = GridCell() } }
+        for r in rows { for c in 0..<gridSize { grid[r][c] = BBGridCell() } }
+        for c in cols { for r in 0..<gridSize { grid[r][c] = BBGridCell() } }
         return rows.count + cols.count
     }
     
@@ -552,11 +551,11 @@ final class GameViewModel: ObservableObject {
     }
     
     func resetCampaign() {
-        campaignStats = CampaignStats()
-        campaignStats.currentStage = Difficulty.beginner.rawValue
-        campaignStats.highestStageReached = Difficulty.beginner.rawValue
+        campaignStats = BBCampaignStats()
+        campaignStats.currentStage = BBDifficulty.beginner.rawValue
+        campaignStats.highestStageReached = BBDifficulty.beginner.rawValue
         saveCampaignStats()
-        if let stage = Difficulty(rawValue: campaignStats.currentStage) {
+        if let stage = BBDifficulty(rawValue: campaignStats.currentStage) {
             currentDifficulty = stage
         }
         resetGame()
@@ -564,8 +563,8 @@ final class GameViewModel: ObservableObject {
     }
     
     // MARK: Haptics
-    enum HapticKind { case light, medium, rigid, success, error, heavy, warning }
-    func triggerHaptic(_ kind: HapticKind) {
+    enum BBAHapticKind { case light, medium, rigid, success, error, heavy, warning }
+    func triggerHaptic(_ kind: BBAHapticKind) {
         guard hapticsEnabled else { return }
         switch kind {
         case .light:   UIImpactFeedbackGenerator(style: .light).impactOccurred()
@@ -582,13 +581,13 @@ final class GameViewModel: ObservableObject {
     private func spawnParticles(rows: [Int], cols: [Int], color: Color) {
         guard gridFrame != .zero else { return }
         let cs = currentDifficulty.cellSize
-        var newP: [Particle] = []
+        var newP: [BBParticle] = []
         func add(_ x: CGFloat, _ y: CGFloat) {
             let particleCount = currentDifficulty == .ultraHard ? 12 : (currentDifficulty == .expert ? 10 : 6)
             for _ in 0..<particleCount {
                 let angle = CGFloat.random(in: 0..<2 * .pi)
                 let speed = CGFloat.random(in: 50...160)
-                newP.append(Particle(
+                newP.append(BBParticle(
                     x: x, y: y,
                     vx: cos(angle)*speed, vy: sin(angle)*speed,
                     color: color,
@@ -620,62 +619,47 @@ final class GameViewModel: ObservableObject {
     }
 }
 
-// MARK: - App Entry
+// MARK: - Game Root
 
-@main
-struct BlockBlastApp: App {
-    var body: some Scene {
-        WindowGroup { RootView() }
-    }
-}
-
-// MARK: - Root
-
-struct RootView: View {
-    @StateObject private var vm = GameViewModel()
+struct BlockBlastGameView: View {
+    @StateObject private var vm = BBGameViewModel()
 
     var body: some View {
-        TabView {
-            GameRootView()
-                .tabItem { Label("Campaign", systemImage: "flag.fill") }
-            StatsView()
-                .tabItem { Label("Stats",    systemImage: "chart.bar.fill") }
-            SettingsView()
-                .tabItem { Label("Settings", systemImage: "gearshape.fill") }
+        ZStack {
+            BBGameRootView()
+                .environmentObject(vm)
         }
-        .environmentObject(vm)
         .preferredColorScheme(.dark)
-        .tint(.neonCyan)
     }
 }
 
 // MARK: - Game Root
 
-struct GameRootView: View {
-    @EnvironmentObject var vm: GameViewModel
+struct BBGameRootView: View {
+    @EnvironmentObject var vm: BBGameViewModel
 
     var body: some View {
         ZStack {
-            GameContentView()
+            BBGameContentView()
 
             if let idx = vm.draggedBlockIndex, let block = vm.queue[idx] {
-                BlockShapeView(block: block, cs: vm.currentDifficulty.cellSize)
+                BBBlockShapeView(block: block, cs: vm.currentDifficulty.cellSize)
                     .opacity(0.8)
                     .position(vm.dragLocation)
                     .allowsHitTesting(false)
                     .ignoresSafeArea()
             }
 
-            ParticlesView()
+            BBParticlesView()
             
             // Victory overlay
             if vm.showVictory {
-                VictoryOverlay()
+                BBVictoryOverlay()
             }
             
             // Defeat overlay
             if vm.showDefeat {
-                DefeatOverlay()
+                BBDefeatOverlay()
             }
         }
         .ignoresSafeArea(edges: .top)
@@ -684,8 +668,8 @@ struct GameRootView: View {
 
 // MARK: - Victory Overlay
 
-struct VictoryOverlay: View {
-    @EnvironmentObject var vm: GameViewModel
+struct BBVictoryOverlay: View {
+    @EnvironmentObject var vm: BBGameViewModel
     
     var body: some View {
         ZStack {
@@ -701,8 +685,7 @@ struct VictoryOverlay: View {
                     .font(.system(size: 18, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
                 
-                // Show next stage or completion
-                let allDifficulties = Difficulty.allCases
+                let allDifficulties = BBDifficulty.allCases
                 if let currentIndex = allDifficulties.firstIndex(of: vm.currentDifficulty),
                    currentIndex + 1 < allDifficulties.count {
                     Text("Next: \(allDifficulties[currentIndex + 1].label)")
@@ -726,8 +709,8 @@ struct VictoryOverlay: View {
 
 // MARK: - Defeat Overlay
 
-struct DefeatOverlay: View {
-    @EnvironmentObject var vm: GameViewModel
+struct BBDefeatOverlay: View {
+    @EnvironmentObject var vm: BBGameViewModel
     
     var body: some View {
         ZStack {
@@ -758,8 +741,8 @@ struct DefeatOverlay: View {
 
 // MARK: - Game Content
 
-struct GameContentView: View {
-    @EnvironmentObject var vm: GameViewModel
+struct BBGameContentView: View {
+    @EnvironmentObject var vm: BBGameViewModel
 
     var body: some View {
         ZStack {
@@ -827,7 +810,7 @@ struct GameContentView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 8)
 
-                GridView()
+                BBGridView()
                     .padding(.horizontal, 10)
 
                 Spacer(minLength: 6)
@@ -838,14 +821,14 @@ struct GameContentView: View {
                     .tracking(3)
                     .padding(.bottom, 4)
 
-                BlockQueueView()
+                BBBlockQueueView()
                     .padding(.horizontal, 14)
 
-                ShuffleBtn()
+                BBShuffleBtn()
                     .padding(.top, 6)
                     .padding(.bottom, 10)
 
-                UndoButton()
+                BBUndoButton()
                     .padding(.bottom, 10)
             }
         }
@@ -860,8 +843,8 @@ struct GameContentView: View {
 
 // MARK: - Grid View
 
-struct GridView: View {
-    @EnvironmentObject var vm: GameViewModel
+struct BBGridView: View {
+    @EnvironmentObject var vm: BBGameViewModel
 
     var body: some View {
         let cs = vm.currentDifficulty.cellSize
@@ -880,7 +863,7 @@ struct GridView: View {
 
                 ForEach(0..<gs, id: \.self) { row in
                     ForEach(0..<gs, id: \.self) { col in
-                        CellView(row: row, col: col, cs: cs)
+                        BBCellView(row: row, col: col, cs: cs)
                             .frame(width: cs-2, height: cs-2)
                             .position(
                                 x: ox + CGFloat(col)*cs + cs/2,
@@ -907,8 +890,8 @@ struct GridView: View {
 
 // MARK: - Cell View
 
-struct CellView: View {
-    @EnvironmentObject var vm: GameViewModel
+struct BBCellView: View {
+    @EnvironmentObject var vm: BBGameViewModel
     let row: Int
     let col: Int
     let cs: CGFloat
@@ -917,9 +900,9 @@ struct CellView: View {
         vm.highlightedCells.contains { $0.0 == row && $0.1 == col }
     }
     
-    private var safeCell: GridCell {
+    private var safeCell: BBGridCell {
         guard row >= 0 && row < vm.grid.count && col >= 0 && col < vm.grid[row].count else {
-            return GridCell()
+            return BBGridCell()
         }
         return vm.grid[row][col]
     }
@@ -949,13 +932,13 @@ struct CellView: View {
         .animation(.easeInOut(duration: 0.1), value: hl)
     }
 
-    private func fillColor(cell: GridCell, hl: Bool) -> Color {
+    private func fillColor(cell: BBGridCell, hl: Bool) -> Color {
         if cell.filled { return cell.color }
         if hl { return vm.highlightValid ? Color.neonGreen.opacity(0.4) : Color.neonPink.opacity(0.4) }
         return Color.cellBorder.opacity(0.3)
     }
 
-    private func strokeColor(cell: GridCell, hl: Bool) -> Color {
+    private func strokeColor(cell: BBGridCell, hl: Bool) -> Color {
         if cell.filled { return cell.color.opacity(0.65) }
         if hl { return vm.highlightValid ? .neonGreen : .neonPink }
         return .cellBorder
@@ -964,15 +947,15 @@ struct CellView: View {
 
 // MARK: - Block Queue
 
-struct BlockQueueView: View {
-    @EnvironmentObject var vm: GameViewModel
+struct BBBlockQueueView: View {
+    @EnvironmentObject var vm: BBGameViewModel
 
     var body: some View {
         HStack(spacing: 0) {
             ForEach(0..<3, id: \.self) { i in
                 Group {
                     if let block = vm.queue[i] {
-                        DraggableBlockView(block: block, index: i)
+                        BBDraggableBlockView(block: block, index: i)
                             .opacity(vm.draggedBlockIndex == i ? 0.15 : 1)
                     } else {
                         Spacer().frame(maxWidth: .infinity, minHeight: 80)
@@ -993,14 +976,14 @@ struct BlockQueueView: View {
 
 // MARK: - Draggable Block
 
-struct DraggableBlockView: View {
-    @EnvironmentObject var vm: GameViewModel
-    let block: Block
+struct BBDraggableBlockView: View {
+    @EnvironmentObject var vm: BBGameViewModel
+    let block: BBBlock
     let index: Int
     @State private var dragging = false
 
     var body: some View {
-        BlockShapeView(block: block, cs: previewCS)
+        BBBlockShapeView(block: block, cs: previewCS)
             .scaleEffect(dragging ? 1.08 : 1.0)
             .animation(.spring(response: 0.18), value: dragging)
             .gesture(
@@ -1023,8 +1006,8 @@ struct DraggableBlockView: View {
 
 // MARK: - Block Shape View
 
-struct BlockShapeView: View {
-    let block: Block
+struct BBBlockShapeView: View {
+    let block: BBBlock
     let cs: CGFloat
 
     var body: some View {
@@ -1059,8 +1042,8 @@ struct BlockShapeView: View {
 
 // MARK: - Shuffle Button
 
-struct ShuffleBtn: View {
-    @EnvironmentObject var vm: GameViewModel
+struct BBShuffleBtn: View {
+    @EnvironmentObject var vm: BBGameViewModel
 
     var body: some View {
         Button { vm.shuffle() } label: {
@@ -1091,8 +1074,8 @@ struct ShuffleBtn: View {
 
 // MARK: - Undo Button
 
-struct UndoButton: View {
-    @EnvironmentObject var vm: GameViewModel
+struct BBUndoButton: View {
+    @EnvironmentObject var vm: BBGameViewModel
 
     var body: some View {
         Button(action: { vm.undoLastMove() }) {
@@ -1116,8 +1099,8 @@ struct UndoButton: View {
 
 // MARK: - Particles
 
-struct ParticlesView: View {
-    @EnvironmentObject var vm: GameViewModel
+struct BBParticlesView: View {
+    @EnvironmentObject var vm: BBGameViewModel
 
     var body: some View {
         ZStack {
@@ -1136,8 +1119,8 @@ struct ParticlesView: View {
 
 // MARK: - Stats View
 
-struct StatsView: View {
-    @EnvironmentObject var vm: GameViewModel
+struct BBStatsView: View {
+    @EnvironmentObject var vm: BBGameViewModel
 
     var body: some View {
         NavigationView {
@@ -1173,7 +1156,7 @@ struct StatsView: View {
                                 .padding(.leading, 5)
                             
                             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
-                                ForEach(Difficulty.allCases, id: \.self) { d in
+                                ForEach(BBDifficulty.allCases, id: \.self) { d in
                                     let isCompleted = isStageCompleted(d)
                                     let isCurrent = vm.currentDifficulty == d
                                     
@@ -1203,10 +1186,10 @@ struct StatsView: View {
                         .padding(.horizontal, 16)
 
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                            StatCard(label: "Total Score",   value: "\(vm.campaignStats.totalScore)",  color: .neonCyan)
-                            StatCard(label: "Games Played",  value: "\(vm.campaignStats.gamesPlayed)", color: .neonOrange)
-                            StatCard(label: "Games Won",     value: "\(vm.campaignStats.gamesWon)",    color: .neonGreen)
-                            StatCard(label: "Win Rate",      value: String(format: "%.1f%%", vm.campaignStats.winRate), color: .neonPink)
+                            BBStatCard(label: "Total Score",   value: "\(vm.campaignStats.totalScore)",  color: .neonCyan)
+                            BBStatCard(label: "Games Played",  value: "\(vm.campaignStats.gamesPlayed)", color: .neonOrange)
+                            BBStatCard(label: "Games Won",     value: "\(vm.campaignStats.gamesWon)",    color: .neonGreen)
+                            BBStatCard(label: "Win Rate",      value: String(format: "%.1f%%", vm.campaignStats.winRate), color: .neonPink)
                         }
                     }
                     .padding(.horizontal, 16)
@@ -1222,8 +1205,8 @@ struct StatsView: View {
         }
     }
     
-    private func isStageCompleted(_ difficulty: Difficulty) -> Bool {
-        let all = Difficulty.allCases
+    private func isStageCompleted(_ difficulty: BBDifficulty) -> Bool {
+        let all = BBDifficulty.allCases
         if let currentIndex = all.firstIndex(of: vm.currentDifficulty),
            let stageIndex = all.firstIndex(of: difficulty) {
             return stageIndex < currentIndex
@@ -1232,7 +1215,7 @@ struct StatsView: View {
     }
 }
 
-struct StatCard: View {
+struct BBStatCard: View {
     let label: String
     let value: String
     let color: Color
@@ -1261,8 +1244,8 @@ struct StatCard: View {
 
 // MARK: - Settings View
 
-struct SettingsView: View {
-    @EnvironmentObject var vm: GameViewModel
+struct BBSettingsView: View {
+    @EnvironmentObject var vm: BBGameViewModel
     @State private var confirmReset = false
 
     var body: some View {

@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-//@main
-//struct Block_Blast_PuzzleApp: App {
-//    var body: some Scene {
-//        WindowGroup {
-//            ContentView()
-//        }
-//    }
-//}
+@main
+struct Block_Blast_PuzzleApp: App {
+    var body: some Scene {
+        WindowGroup {
+            HomeMenuView()
+        }
+    }
+}
